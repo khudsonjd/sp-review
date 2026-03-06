@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0f3460">
+<title>SP Portfolio Review · v5Mar26.1.2</title>
+<style>
+  :root {
+    --primary: #0f3460;
+    --accent: #e94560;
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --border: #e2e8f0;
+    --green: #10b981;
+    --amber: #f59e0b;
+    --red: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header {
+    background: var(--primary);
+    color: white;
+    padding: 16px 20px 12px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  header h1 { font-size: 17px; font-weight: 700; letter-spacing: 0.3px; }
+  header p { font-size: 11px; opacity: 0.7; margin-top: 2px; }
+  header .kk-brand { font-size: 10.5px; margin-top: 5px; opacity: 0.85; }
+  header .kk-brand a { color: #7eb8f7; text-decoration: none; font-weight: 600; }
+  header .kk-brand a:hover { text-decoration: underline; }
+  .update-btn {
+    display: inline-block; margin-top: 8px;
+    padding: 5px 14px;
+    background: var(--accent); color: white;
+    border: none; border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+    text-decoration: none; cursor: pointer;
+    letter-spacing: 0.3px;
+  }
+
+  nav {
+    display: flex; overflow-x: auto; gap: 0;
+    background: var(--primary);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  nav button {
+    flex: 0 0 auto;
+    padding: 10px 16px;
+    background: none; border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 12px; font-weight: 600;
+    cursor: pointer; white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  nav button.active { color: white; border-bottom-color: var(--accent); }
+
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    border-left: 4px solid var(--primary);
+  }
+  .card.accent { border-left-color: var(--accent); }
+  .card.green { border-left-color: var(--green); }
+  .card.amber { border-left-color: var(--amber); }
+
+  .card h2 { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+  .card h2.accent { color: var(--accent); }
+
+  .card ul { padding-left: 16px; }
+  .card ul li { font-size: 13px; color: var(--text); line-height: 1.6; margin-bottom: 3px; }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+    margin: 3px 3px 3px 0;
+  }
+  .badge.green { background: #d1fae5; color: #065f46; }
+  .badge.amber { background: #fef3c7; color: #92400e; }
+  .badge.blue { background: #dbeafe; color: #1e40af; }
+
+  .disposition-card {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    cursor: pointer;
+  }
+  .disposition-card .title { font-size: 14px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+  .disposition-card .body { font-size: 12.5px; color: var(--muted); margin-top: 6px; line-height: 1.55; display: none; }
+  .disposition-card.open .body { display: block; }
+  .disposition-card .arrow { transition: transform 0.2s; font-size: 12px; }
+  .disposition-card.open .arrow { transform: rotate(90deg); }
+
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    background: var(--card); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    cursor: pointer;
+  }
+  .checklist-item input[type=checkbox] {
+    width: 18px; height: 18px; margin-top: 1px;
+    accent-color: var(--primary); cursor: pointer; flex-shrink: 0;
+  }
+  .checklist-item label { font-size: 13px; line-height: 1.55; cursor: pointer; }
+  .checklist-item.checked label { text-decoration: line-through; color: var(--muted); }
+
+  .reset-btn {
+    display: block; width: 100%; margin-top: 4px;
+    padding: 10px; background: var(--primary); color: white;
+    border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
+    cursor: pointer;
+  }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th { background: var(--primary); color: white; padding: 8px 10px; text-align: left; }
+  td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  tr:nth-child(even) td { background: #f8fafc; }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📋 SP Portfolio Review</h1>
+  <p>Legacy SharePoint Architectural Review · Quick Reference · v5Mar26.1.2</p>
+  <p class="kk-brand">Brought to you by the <a href="https://sites.google.com/view/et4sp/home" target="_blank">K&amp;K Method for SharePoint Development</a></p>
+  <a class="update-btn" href="GOOGLE_DRIVE_LINK_HERE" target="_blank">⬇ Get Latest Version · v5Mar26.1.2</a>
+</header>
+
+<nav>
+  <button class="active" onclick="show('overview', this)">Overview</button>
+  <button onclick="show('cio', this)">CIO Lens</button>
+  <button onclick="show('disposition', this)">Disposition</button>
+  <button onclick="show('triage', this)">Triage</button>
+  <button onclick="show('mdffs', this)">mDFFS Case</button>
+  <button onclick="show('checklist', this)">Checklist</button>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <div id="overview" class="section active">
+    <div class="card">
+      <h2>What Is a Portfolio Rationalization Review?</h2>
+      <ul>
+        <li>A structured initiative to evaluate legacy SharePoint solutions and determine their appropriate future state</li>
+        <li>Not merely a technical audit — it is a <strong>governance exercise</strong></li>
+        <li>Applicable to any organization, regardless of portfolio size</li>
+      </ul>
+    </div>
+    <div class="card accent">
+      <h2 class="accent">Why It Matters</h2>
+      <ul>
+        <li>Reduces organizational risk from aging, undocumented tools</li>
+        <li>Eliminates redundant maintenance overhead</li>
+        <li>Replaces one-off builds with modern, repeatable patterns</li>
+        <li>Establishes a supportable, documented operational baseline</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h2>Two Parallel Objectives</h2>
+      <div class="pill-row">
+        <span class="badge blue">Obj 1: Strategic Disposition</span>
+        <span class="badge green">Obj 2: Operational Documentation</span>
+      </div>
+      <ul style="margin-top:10px">
+        <li><strong>Obj 1:</strong> Consult enterprise architecture → assign sunset / migrate / modernize / retain</li>
+        <li><strong>Obj 2:</strong> Document each solution so support requests can be triaged without escalating to a developer</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CIO LENS -->
+  <div id="cio" class="section">
+    <div class="card">
+      <h2>Strategic Alignment</h2>
+      <ul>
+        <li>Does each solution still serve an active, clearly defined business need?</li>
+        <li>Has the need evolved — does a better tool now exist?</li>
+        <li>Does retaining this create shadow IT or governance debt?</li>
+      </ul>
+    </div>
+    <div class="card accent">
+      <h2>Total Cost of Ownership</h2>
+      <ul>
+        <li>Ongoing maintenance burden (licensing, dev time, support tickets)?</li>
+        <li>Risk cost of keeping it undocumented and aging?</li>
+        <li>Cost of migration vs. cost of continued maintenance?</li>
+      </ul>
+    </div>
+    <div class="card amber">
+      <h2>Risk & Compliance</h2>
+      <ul>
+        <li>Sensitive or regulated data? Compliant with current standards?</li>
+        <li>Dependent on deprecated tech or unsupported third-party components?</li>
+        <li>Business impact if this solution breaks today with no documentation?</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h2>Standardization & Scalability</h2>
+      <ul>
+        <li>One-off build or a pattern replicated across the organization?</li>
+        <li>Can it be replaced by a repeatable, low-complexity enterprise pattern?</li>
+        <li>Opportunity to consolidate multiple similar solutions?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>Developer & Support Dependency</h2>
+      <ul>
+        <li>Is institutional knowledge locked in a single person?</li>
+        <li>Can it be triaged without deep SharePoint expertise?</li>
+        <li>How hand-off ready is this solution today?</li>
+      </ul>
+    </div>
+    <div class="card accent">
+      <h2>Stakeholder & Change Management</h2>
+      <ul>
+        <li>Who is the current business owner? Are they actively engaged?</li>
+        <li>Will sunsetting or migrating create stakeholder friction?</li>
+        <li>Is executive sponsorship available for disposition decisions?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- DISPOSITION -->
+  <div id="disposition" class="section">
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Tap each disposition to expand decision criteria.</p>
+
+    <div class="disposition-card" onclick="toggle(this)">
+      <div class="title"><span>🔴 Sunset</span><span class="arrow">▶</span></div>
+      <div class="body">
+        <strong>Use when:</strong> The underlying business need no longer exists.<br><br>
+        <strong>Ask:</strong> Has the process, policy, or regulation this supported been retired? Is there zero active usage? Are there no foreseeable future use cases?<br><br>
+        <strong>Key actions:</strong> Archive data per retention policy, notify stakeholders, decommission the solution.
+      </div>
+    </div>
+
+    <div class="disposition-card" onclick="toggle(this)">
+      <div class="title"><span>🟡 Migrate</span><span class="arrow">▶</span></div>
+      <div class="body">
+        <strong>Use when:</strong> The business need is active and an existing enterprise platform already meets it.<br><br>
+        <strong>Ask:</strong> Does an approved enterprise tool already do this? Can users be moved with minimal disruption?<br><br>
+        <strong>Key actions:</strong> Map current functionality to the target platform, plan the migration, retire the legacy solution.
+      </div>
+    </div>
+
+    <div class="disposition-card" onclick="toggle(this)">
+      <div class="title"><span>🔵 Modernize</span><span class="arrow">▶</span></div>
+      <div class="body">
+        <strong>Use when:</strong> The business need is active but no enterprise tool is a perfect fit — however, one could be adapted or a low-complexity pattern applied.<br><br>
+        <strong>Ask:</strong> What is the rebuild effort vs. the ongoing maintenance debt? Is there a standardized low-complexity pattern (e.g., mDFFS) that fits?<br><br>
+        <strong>Key actions:</strong> Scope the modernization effort, select the target pattern, build the business case.
+      </div>
+    </div>
+
+    <div class="disposition-card" onclick="toggle(this)">
+      <div class="title"><span>🟢 Retain & Document</span><span class="arrow">▶</span></div>
+      <div class="body">
+        <strong>Use when:</strong> The solution remains the best fit and is actively used.<br><br>
+        <strong>Ask:</strong> Is it stable? Is it supportable without deep expertise? Is it documented well enough to triage?<br><br>
+        <strong>Key actions:</strong> Complete Objective 2 operational documentation, assign triage ownership, schedule periodic review.
+      </div>
+    </div>
+  </div>
+
+  <!-- TRIAGE -->
+  <div id="triage" class="section">
+    <div class="card green">
+      <h2>Resolve at First-Line Support</h2>
+      <ul>
+        <li>Add or remove a user from a SharePoint group</li>
+        <li>Direct user to the appropriate entitlements or access request platform</li>
+        <li>Make a simple DFFS form configuration change</li>
+        <li>Update a list view or column setting</li>
+        <li>Provide user education on how to use the solution</li>
+      </ul>
+    </div>
+    <div class="card amber">
+      <h2>Escalate to Developer</h2>
+      <ul>
+        <li>DFFS rules logic is broken or needs redesign</li>
+        <li>Workflow or Power Automate flow failure</li>
+        <li>Data integrity issue or missing records</li>
+        <li>Custom code (JavaScript, REST API) is broken</li>
+        <li>Complex SharePoint permissions inheritance issue</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>First-Response Triage Questions</h2>
+      <ul>
+        <li>Which solution is affected? (Get the URL)</li>
+        <li>What were you trying to do when the issue occurred?</li>
+        <li>When did it last work correctly?</li>
+        <li>Has anything changed recently? (permissions, migration, platform update)</li>
+        <li>How many users are affected?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- mDFFS CASE -->
+  <div id="mdffs" class="section">
+    <div class="card accent">
+      <h2>Low-Complexity Patterns: The mDFFS Example</h2>
+      <ul>
+        <li>A key opportunity in any rationalization review is identifying where a <strong>Standardized Low-Complexity Pattern</strong> can replace multiple one-off builds</li>
+        <li><strong>Modern DFFS (mDFFS)</strong> is one such pattern for form-centric SharePoint solutions</li>
+        <li>An evidence-based case must be built through real data gathered during the review</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>mDFFS vs. Power Apps</h2>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Dimension</th><th>mDFFS</th><th>Power Apps</th></tr>
+          <tr><td>Dev Speed</td><td>✅ Faster</td><td>🔶 Slower</td></tr>
+          <tr><td>Maintenance</td><td>✅ Lower</td><td>🔶 Higher</td></tr>
+          <tr><td>Licensing</td><td>✅ Included</td><td>🔶 Additional cost</td></tr>
+          <tr><td>Vendor Lock-in</td><td>✅ Less</td><td>🔶 More</td></tr>
+          <tr><td>Standardization</td><td>✅ Repeatable</td><td>🔶 Variable</td></tr>
+          <tr><td>Enterprise Support</td><td>🔶 Smaller community</td><td>✅ Larger</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card green">
+      <h2>Data to Capture During the Review</h2>
+      <ul>
+        <li>Developer hours required per modernization effort</li>
+        <li>Licensing costs avoided vs. alternative platforms</li>
+        <li>Support ticket volume before and after modernization</li>
+        <li>Business owner satisfaction with rebuilt solutions</li>
+        <li>Use this data to present a formal pattern proposal to enterprise architecture</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div id="checklist" class="section">
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px">Complete for each solution in the portfolio. Tap any item to check it off.</p>
+    <div id="checks"></div>
+    <button class="reset-btn" onclick="resetChecks()">↺ Reset Checklist</button>
+  </div>
+
+</main>
+
+<script>
+  const checks = [
+    // Strategic Assessment
+    "Identified current business owner and confirmed their engagement",
+    "Confirmed whether the underlying business need is still active",
+    "Evaluated whether an existing enterprise platform already meets the need",
+    "Assessed total cost of ownership (maintenance, licensing, support burden)",
+    "Assessed risk exposure: sensitive data, compliance, deprecated dependencies",
+    "Assessed business impact if the solution fails today",
+    "Determined whether this is a unique build or a repeated pattern across the org",
+    "Assigned a disposition: Sunset / Migrate / Modernize / Retain & Document",
+    // Operational Documentation
+    "Documented solution URL(s) and access points",
+    "Documented SharePoint groups and permission structure",
+    "Documented DFFS form configuration (if applicable)",
+    "Documented workflows and automation (if applicable)",
+    "Identified the appropriate developer for complex escalations",
+    "Confirmed first-line support owner has sufficient context to triage independently"
+  ];
+
+  const dividers = { 0: "📊 Strategic Assessment", 8: "📁 Operational Documentation" };
+
+  function buildChecks() {
+    const container = document.getElementById('checks');
+    container.innerHTML = '';
+    const saved = JSON.parse(localStorage.getItem('sp_checks') || '{}');
+    checks.forEach((text, i) => {
+      if (dividers[i]) {
+        const hdr = document.createElement('p');
+        hdr.style = 'font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:12px 0 6px 2px';
+        hdr.textContent = dividers[i];
+        container.appendChild(hdr);
+      }
+      const checked = saved[i] || false;
+      const div = document.createElement('div');
+      div.className = 'checklist-item' + (checked ? ' checked' : '');
+      div.innerHTML = `<input type="checkbox" id="c${i}" ${checked ? 'checked' : ''} onchange="saveCheck(${i}, this.checked)"><label for="c${i}">${text}</label>`;
+      container.appendChild(div);
+    });
+  }
+
+  function saveCheck(i, val) {
+    const saved = JSON.parse(localStorage.getItem('sp_checks') || '{}');
+    saved[i] = val;
+    localStorage.setItem('sp_checks', JSON.stringify(saved));
+    buildChecks();
+  }
+
+  function resetChecks() {
+    localStorage.removeItem('sp_checks');
+    buildChecks();
+  }
+
+  function show(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggle(el) { el.classList.toggle('open'); }
+
+  buildChecks();
+</script>
+</body>
+</html>
